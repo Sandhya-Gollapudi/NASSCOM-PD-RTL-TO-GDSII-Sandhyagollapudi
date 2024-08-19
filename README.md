@@ -1,4 +1,4 @@
-![4d4](https://github.com/user-attachments/assets/be46c85f-7cb2-413b-ab8f-b5c58ffabe90)# NASSCOM-PD-RTL-TO-GDSII-Sandhyagollapudi
+# NASSCOM-PD-RTL-TO-GDSII-Sandhyagollapudi
 I attended a two-week workshop by VSD and NASSCOM, focused on converting RTL to GDSII using OpenLane and open-source tools. The course, which I found via Kunal Ghosh on LinkedIn, covered Digital SoC and Physical Design. We worked with the SkyWater 130 open-source PDK throughout the program.
 
 ## Day 1 - Inception of open-source EDA OpenLANE and sky130 PDK
