@@ -714,20 +714,29 @@ ngspice sky130_inv.spice
 plot y vs time a
  ```
 ![s1](https://github.com/user-attachments/assets/55d4b1d3-08f0-4f51-a982-bf9be32e8863)
+
 Rise time It is time taken to the output waveform to 20% value to 80% value.
+
 ![s2](https://github.com/user-attachments/assets/7a5b43a9-5ef3-42ed-80d1-e2e7b27ac052)
+
 so, rise time= (2.24569 - 2.18217)e-09 = 63.52 psec.
 Fall time
 it is the time take by output for transition from 80% to 20%
+
 ![s3](https://github.com/user-attachments/assets/e7fb500f-6b96-4667-9ad7-f1acc05a8e8d)
+
 so, fall time= (4.09641 - 4.04758)e-09 = 48.83 psec
 Propagation delay
 it is the time difference between the 50% of input and 50% of the output.
+
 ![s4](https://github.com/user-attachments/assets/ccce5dfd-080b-4d7f-be0c-18a5ff76e670)
+
 so, propogation delay =(2.21106 - 2.15144)e-09 = 59.62 psec.
 Cell rise delay
 Time taken by output to rise to 50% and input to fall to 50%
+
 ![s5](https://github.com/user-attachments/assets/43a3d7a6-3437-475b-bbde-ffff8cd0a395)
+
 so,cell fall delay=(4.08482-4.04771)e-09=37.11psec
 
 ### D3 SK3 Sky130 Tech File labs
