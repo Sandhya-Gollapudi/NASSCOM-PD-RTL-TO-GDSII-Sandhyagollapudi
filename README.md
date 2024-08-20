@@ -1663,3 +1663,134 @@ run_cts
 # Now that CTS is done we can do power distribution network
 gen_pdn
  ```
+![5d1](https://github.com/user-attachments/assets/a290f316-a0a8-4fe6-93c0-24ded2aea4f6)
+
+![5d2](https://github.com/user-attachments/assets/135eeeac-4708-4e12-bd36-1b16036e4a53)
+
+![5d3](https://github.com/user-attachments/assets/583f15e2-e229-43ef-ab4e-c09d76b8578d)
+
+``` bash 
+# Change directory to path containing generated PDN def
+cd Desktop/work/tools/openlane_working_dir/openlane/designs/picorv32a/runs/20-08_04-22/tmp/floorplan/
+
+# Command to load the PDN def in magic tool
+magic -T /home/vsduser/Desktop/work/tools/openlane_working_dir/pdks/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.lef def read 14-pdn.def &
+ ```
+![image](https://github.com/user-attachments/assets/5c20f4f4-35aa-4655-8800-51d0ceb70d4b)
+
+In the image, the green area represents the chip, while the yellow, red, and blue boxes indicate the I/O pins, power pads, and ground pads, respectively.
+
+Power is transferred from the pads to the rings through the black dots shown at the intersection points of the rings and pads.
+
+The vertical and horizontal tracks, represented by red and blue lines, ensure that power is effectively distributed from the ring to the chip. This illustrates how power planning is implemented in the physical design of a device.
+
+To perform detailed routing using TritonRoute and explore the routed layout, follow these steps:
+
+``` bash 
+# Check value of 'CURRENT_DEF'
+echo $::env(CURRENT_DEF)
+
+# Check value of 'ROUTING_STRATEGY'
+echo $::env(ROUTING_STRATEGY)
+
+# Command for detailed route using TritonRoute
+run_routing
+Screenshots of routing run
+ ```
+
+![5d5](https://github.com/user-attachments/assets/477d6605-f164-4c1d-94e5-2a2501857aec)
+
+##### Commands to load routed def in magic
+
+``` bash 
+# Change directory to path containing routed def
+cd Desktop/work/tools/openlane_working_dir/openlane/designs/picorv32a/runs/20-08_04-22/results/routing/
+
+# Command to load the routed def in magic tool
+magic -T /home/vsduser/Desktop/work/tools/openlane_working_dir/pdks/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.lef def read picorv32a.def &
+ ```
+![5d6](https://github.com/user-attachments/assets/14f29fd4-2799-4a3b-ad71-f5fb006f4fcb)
+
+![5d7](https://github.com/user-attachments/assets/5ab08cf9-7920-4b1d-ae25-46fdfdc6ca43)
+
+### D5 SK3 Tritron route features
+
+![image](https://github.com/user-attachments/assets/8472b03c-880d-4b99-90a3-388727138027)
+
+![image](https://github.com/user-attachments/assets/1885d6a2-c2a7-4ce8-8750-816697a5b119)
+
+![image](https://github.com/user-attachments/assets/10229418-3c0b-4fbc-bc8a-50907337e5fc)
+
+![image](https://github.com/user-attachments/assets/aa2d0058-359d-4b79-9f8b-c720590bfe21)
+
+![image](https://github.com/user-attachments/assets/2b83f356-048a-4777-b417-ca19ce9d4647)
+
+TritonRoute is an advanced detailed routing tool for IC physical design, particularly effective for complex and advanced technology nodes. It uses preprocessed route guides from the global routing stage to streamline the detailed routing process. The tool optimizes both intra-layer and inter-layer routing, ensuring efficient connections across different metal layers with minimal interference. It employs parallel routing within layers and sequential routing between layers, improving routing speed and accuracy. TritonRoute also features sophisticated algorithms for managing connectivity access points and access point clusters, which helps reduce congestion and ensures reliable connections throughout the design.
+
+| **Feature**             | **Fast Routing (Global Routing)**                    | **Detailed Routing**                                          |
+|-------------------------|--------------------------------------------------------|--------------------------------------------------------------|
+| **Purpose**              | Provides an initial, approximate routing plan           | Finalizes the exact routing paths adhering to all constraints |
+| **Speed**                | Fast and less computationally intensive                 | Slower and computationally demanding                          |
+| **Accuracy**             | Provides a coarse estimate; not fully accurate          | Highly accurate, ensuring manufacturability and performance   |
+| **Design Rule Compliance** | Limited consideration of design rules                   | Full adherence to design rules and constraints                |
+| **Use Case**             | Early-stage congestion analysis and layer assignment    | Final routing step before tape-out                            |
+| **Output**               | Approximate paths and layer assignments                 | Final, optimized, and DRC-compliant layout                    |
+
+To perform post-route timing analysis using OpenSTA with the extracted parasitics, follow these steps:
+
+``` bash 
+ # Command to run OpenROAD tool
+openroad
+
+# Reading lef file
+read_lef /openLANE_flow/designs/picorv32a/runs/20-08_04-22/tmp/merged.lef
+
+# Reading def file
+read_def /openLANE_flow/designs/picorv32a/runs/20-08_04-22/results/routing/picorv32a.def
+
+# Creating an OpenROAD database to work with
+write_db pico_route.db
+
+# Loading the created database in OpenROAD
+read_db pico_route.db
+
+# Read netlist post CTS
+read_verilog /openLANE_flow/designs/picorv32a/runs/20-08_04-22/results/synthesis/picorv32a.synthesis_preroute.v
+
+# Read library for design
+read_liberty $::env(LIB_SYNTH_COMPLETE)
+
+# Link design and library
+link_design picorv32a
+
+# Read in the custom sdc we created
+read_sdc /openLANE_flow/designs/picorv32a/src/my_base.sdc
+
+# Setting all cloks as propagated clocks
+set_propagated_clock [all_clocks]
+
+# Read SPEF
+read_spef /openLANE_flow/designs/picorv32a/runs/20-08_04-22/results/routing/picorv32a.spef
+
+# Generating custom timing report
+report_checks -path_delay min_max -fields {slew trans net cap input_pins} -format full_clock_expanded -digits 4
+
+# Exit to OpenLANE flow
+exit
+ ```
+![5d8](https://github.com/user-attachments/assets/82c9f084-0541-4e6f-9517-e43d9f635a12)
+
+![5d9](https://github.com/user-attachments/assets/2e96c18b-69cb-4087-897c-a18768a18d2a)
+
+In OpenLANE, since SPEF extraction is not natively supported, the process of extracting parasitics and performing post-route timing analysis needs to be done using external tools
+
+![5d10](https://github.com/user-attachments/assets/f1d1856c-95e5-478d-a53a-a18ab7adfaae)
+
+# Acknowledgements
+I would like to express my gratitude to Mr. Kunal Ghosh for sharing this insightful workshop, and I would also like to extend my thanks to the GitHub OpenLane community for their invaluable contributions.
+
+# References
+
+- https://github.com/The-OpenROAD-Project/OpenLane
+- https://github.com/nickson-jose/vsdstdcelldesign
+- https://github.com/AnupriyaKrishnamoorthy/NASSCOM-PD-ANU/tree/main
